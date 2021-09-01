@@ -21,8 +21,19 @@ function validateUserId(req, res, next) {
   })
 }
 
-function validateUser(req, res, next) {
-  // DO YOUR MAGIC
+async function validateUser(req, res, next) {
+  try {
+    const {users } = req.params
+    const possibleUser = await Users.update(users)
+    if (possibleUser) {
+      req.users = possibleUser
+      next()
+    } else {
+      next({message: "missing required name field"})
+    }
+  } catch (err) {
+    next(err)
+  }
 }
 
 function validatePost(req, res, next) {
@@ -30,4 +41,8 @@ function validatePost(req, res, next) {
 }
 
 // do not forget to expose these functions to other modules
-module.exports = { logger, validateUserId }
+module.exports = { 
+  logger, 
+  validateUserId, 
+  validateUser 
+}
