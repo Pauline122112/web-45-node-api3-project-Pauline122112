@@ -1,9 +1,10 @@
 const Users = require('../users/users-model')
 
 function logger(req, res, next) {
-  // DO YOUR MAGIC
-  console.log('this is happening')
-  console.log("it is a ${req.method} request!")
+  const timestamp = new Date().toLocaleString()
+  const method = req.method
+  const url = req.originalUrl
+  console.log(`[${timestamp}] ${method} to ${url}`);
   next()
 }
 
@@ -41,8 +42,9 @@ function validatePost(req, res, next) {
 }
 
 // do not forget to expose these functions to other modules
-module.exports = { 
-  logger, 
-  validateUserId, 
-  validateUser 
-}
+module.exports = {
+	logger,
+	validateUserId,
+	validateUser,
+	validatePost,
+};
