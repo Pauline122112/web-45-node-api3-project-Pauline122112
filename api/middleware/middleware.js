@@ -8,33 +8,26 @@ function logger(req, res, next) {
   next()
 }
 
-function validateUserId(req, res, next) {
-  // DO YOUR MAGIC
-  const { id } = req.params
-  Users.getById(id)
-  .then(possibleUser => {
-    if (possibleUser) {
-      req.users = possibleUser
-      next()
-    } else {
-      next({ message: "user not found" });
-    }
-  })
+async function validateUserId(req, res, next) {
+ try {
+   const user = await Users.getById(req.params.id)
+   if(!user) {
+     res.status(404).json({
+       message: 'user not found',
+     })
+   } else {
+     req.user = user
+     next()
+   }
+ } catch (err) {
+   res.status(500).json({
+     message: 'problem finding user',
+   })
+ }
 }
 
-async function validateUser(req, res, next) {
-  try {
-    const {users } = req.params
-    const possibleUser = await Users.update(users)
-    if (possibleUser) {
-      req.users = possibleUser
-      next()
-    } else {
-      next({message: "missing required name field"})
-    }
-  } catch (err) {
-    next(err)
-  }
+function validateUser(req, res, next) {
+ 
 }
 
 function validatePost(req, res, next) {
